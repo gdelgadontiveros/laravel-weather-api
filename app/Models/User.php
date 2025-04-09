@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'location_preference', // para almacenar ubicación favorita
     ];
 
     /**
@@ -46,4 +47,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function weatherRequests()
+    {
+        return $this->hasMany(WeatherRequest::class);
+    }
+
 }
