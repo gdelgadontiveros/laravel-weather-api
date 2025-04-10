@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Weather;
+namespace App\Http\Controllers\API\V1\Weather;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Weather\GetWeatherRequest;
@@ -21,7 +21,7 @@ class WeatherController extends Controller
     
     public function current(GetWeatherRequest $request): JsonResponse
     {
-        $location = $request->validated()['location'] ?? Auth::user()->location_preference;
+        $location = $request->validated()['location'] ?? Auth::user()->location_preference;// localizacion o ubicacion favorita del usuario
         
         if (!$location) {
             return response()->json([
