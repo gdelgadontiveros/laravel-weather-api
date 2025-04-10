@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
+/**
+* @OA\Info(title="API Autenticación", version="1.0")
+*
+* @OA\Server(url="http://127.0.0.1:8000")
+*/
 class AuthController extends Controller
 {
     
@@ -29,6 +34,37 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/v1/auth/register",
+     *     tags={"Autenticación"},
+     *     summary="Registrar nuevo usuario",
+     *     operationId="registerUser",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","email","password","password_confirmation"},
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="Password123!"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="Password123!"),
+     *             @OA\Property(property="weather_api_key", type="string", example="your_weatherapi_key")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuario registrado exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="user", ref="#/components/schemas/User"),
+     *             @OA\Property(property="token", type="string", example="1|abcdefghijk")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
         $validatedData = $request->validate([
