@@ -20,10 +20,11 @@ class MissingRouteTest extends TestCase
                 'status',
                 'code',
                 'message',
-                'details' => [
-                    'requested_url',
+                'request' => [
+                    'url',
                     'method'
-                ]
+                ],
+                'suggestions',
             ]);
     }
     

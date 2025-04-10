@@ -13,11 +13,11 @@ class WeatherApiTest extends TestCase
     public function test_get_current_weather_authenticated()
     {
         $user = User::factory()->create([
-            'location_preference' => 'London'
+            'location_preference' => 'Boston'
         ]);
         
         $response = $this->actingAs($user)
-                        ->getJson('/api/weather/current');
+                        ->getJson('/api/v1/weather/current');
         
         $response->assertStatus(200)
                 ->assertJsonStructure([
@@ -31,7 +31,7 @@ class WeatherApiTest extends TestCase
         $user = User::factory()->create();
         
         $response = $this->actingAs($user)
-                        ->getJson('/api/weather/current?location=Paris');
+                        ->getJson('/api/v1/weather/current?location=Paris');
         
         $response->assertStatus(200)
                 ->assertJsonStructure([
