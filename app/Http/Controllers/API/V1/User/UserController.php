@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+
     /**
      * Get the authenticated user's profile.
      *

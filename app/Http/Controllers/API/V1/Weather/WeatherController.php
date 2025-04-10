@@ -14,11 +14,22 @@ class WeatherController extends Controller
 {
     protected $weatherService;
     
+    /**
+     * WeatherController constructor.
+     *
+     * @param WeatherService $weatherService
+     */
     public function __construct(WeatherService $weatherService)
     {
         $this->weatherService = $weatherService;
     }
     
+    /**
+     * Get the current weather for a specific location (Clima actual para una localizacion especifica).
+     *
+     * @param GetWeatherRequest $request
+     * @return JsonResponse
+     */
     public function current(GetWeatherRequest $request): JsonResponse
     {
         $location = $request->validated()['location'] ?? Auth::user()->location_preference;// localizacion o ubicacion favorita del usuario
@@ -36,6 +47,8 @@ class WeatherController extends Controller
             WeatherRequest::create([
                 'user_id' => Auth::id(),
                 'location' => $location,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->header('User-Agent'),
                 'response_data' => $weatherData,
             ]);
             
@@ -49,6 +62,12 @@ class WeatherController extends Controller
         }
     }
     
+    /**
+     * Get the weather forecast for a specific location (Pronostico para una localizacion especifica).
+     *
+     * @param GetWeatherRequest $request
+     * @return JsonResponse
+     */
     public function forecast(GetWeatherRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -67,6 +86,8 @@ class WeatherController extends Controller
             WeatherRequest::create([
                 'user_id' => Auth::id(),
                 'location' => $location,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->header('User-Agent'),
                 'response_data' => $forecastData,
             ]);
             
