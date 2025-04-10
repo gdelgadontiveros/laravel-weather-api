@@ -5,7 +5,7 @@ use App\Http\Controllers\API\V1\User\UserController;
 use App\Http\Controllers\API\V1\Weather\WeatherController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1/auth')->group(function () {
+Route::prefix('v1/auth')->middleware(['throttle:auth'])->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
     Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
@@ -21,7 +21,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     });
 
     // Weather routes
-    Route::prefix('weather')->group(function () {
+    Route::prefix('weather')->middleware('throttle:weather')->group(function () {
         Route::get('current', [WeatherController::class, 'current']);
         Route::get('forecast', [WeatherController::class, 'forecast']);
     });
