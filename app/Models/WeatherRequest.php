@@ -6,6 +6,39 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @OA\Schema(
+ *     schema="WeatherRequest",
+ *     required={"user_id", "location"},
+ *     @OA\Property(
+ *         property="user_id",
+ *         type="integer",
+ *         @OA\Property(property="user_id", type="integer", example="1"),
+ *     ),
+ *     @OA\Property(
+ *         property="location",
+ *         type="string",
+ *         @OA\Property(property="name", type="string", example="Boston"),
+ *     ),
+ *     @OA\Property(
+ *         property="response_data",
+ *         type="object",
+ *         @OA\Property(property="current", type="object"),
+ *         @OA\Property(property="location", type="object"),
+ *         @OA\Property(property="forecast", type="object"),
+ *     ),
+ *    @OA\Property(
+ *        property="ip_address",
+ *        type="string",
+ *        @OA\Property(property="ip_address", type="string", example="192.168.1.4"),
+ *    ),
+ *   @OA\Property(
+ *      property="user_agent",
+ *      type="string",
+ *      @OA\Property(property="user_agent", type="string", example="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"),
+ *    ),
+ * )
+ */
 class WeatherRequest extends Model
 {
     use HasFactory;

@@ -12,36 +12,21 @@ use Laravel\Sanctum\HasApiTokens;
  * @OA\Schema(
  *     schema="User",
  *     type="object",
- *     title="User",
- *     description="User model",
- *     required={"id", "name", "email"},
- *     @OA\Property(
- *         property="id",
- *         type="integer",
- *         format="int64",
- *         example=1
- *     ),
- *     @OA\Property(
- *         property="name",
- *         type="string",
- *         example="John Doe"
- *     ),
- *     @OA\Property(
- *         property="email",
- *         type="string",
- *         format="email",
- *         example="user@example.com"
- *     ),
- *     @OA\Property(
- *         property="created_at",
- *         type="string",
- *         format="date-time"
- *     ),
- *     @OA\Property(
- *         property="updated_at",
- *         type="string",
- *         format="date-time"
- *     )
+ *     title="Usuario",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="John Doe"),
+ *     @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
+ *     @OA\Property(property="location_preference", type="string", example="Boston"),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="Error",
+ *     type="object",
+ *     title="Error",
+ *     @OA\Property(property="message", type="string", example="Error message"),
+ *     @OA\Property(property="errors", type="object", example={"field": {"Error message"}})
  * )
  */
 class User extends Authenticatable

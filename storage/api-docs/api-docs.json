@@ -1,15 +1,83 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API Autenticación",
+        "title": "Laravel Weather API",
+        "description": "* @OA\\Info(title=\"Laravel Weather API\", version=\"1.0\")\n*",
         "version": "1.0"
     },
-    "servers": [
-        {
-            "url": "http://127.0.0.1:8000"
-        }
-    ],
     "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Iniciar sesión",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Inicio de sesión exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "7|NWXzxuZIQMq2BnKx7W3ASSpNpdBG8a7R0iOiZeyg727f0e85"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciales inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid login details"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/auth/register": {
             "post": {
                 "tags": [
@@ -36,7 +104,7 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "user@example.com"
+                                        "example": "johndoe@example.com"
                                     },
                                     "password": {
                                         "type": "string",
@@ -47,10 +115,6 @@
                                         "type": "string",
                                         "format": "password",
                                         "example": "Password123!"
-                                    },
-                                    "weather_api_key": {
-                                        "type": "string",
-                                        "example": "your_weatherapi_key"
                                     }
                                 },
                                 "type": "object"
@@ -70,7 +134,7 @@
                                         },
                                         "token": {
                                             "type": "string",
-                                            "example": "1|abcdefghijk"
+                                            "example": "7|NWXzxuZIQMq2BnKx7W3ASSpNpdBG8a7R0iOiZeyg727f0e85"
                                         }
                                     },
                                     "type": "object"
@@ -83,22 +147,556 @@
                     }
                 }
             }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Cerrar sesión",
+                "operationId": "logoutUser",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/profile": {
+            "get": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Obtener perfil de usuario",
+                "operationId": "getProfile",
+                "responses": {
+                    "200": {
+                        "description": "Perfil de usuario obtenido exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "johndoe@example.com"
+                                        },
+                                        "location_preference": {
+                                            "type": "string",
+                                            "example": "Boston"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Actualizar perfil de usuario",
+                "operationId": "updateProfile",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123!"
+                                    },
+                                    "location_preference": {
+                                        "type": "string",
+                                        "example": "Boston"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Perfil de usuario actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile updated successfully"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        },
+                                        "name": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The name field is required."
+                                            }
+                                        },
+                                        "email": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The email field is required."
+                                            }
+                                        },
+                                        "password": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The password field is required."
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/location": {
+            "put": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Actualizar ubicación preferida del usuario",
+                "operationId": "updateLocation",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "location"
+                                ],
+                                "properties": {
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Boston"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ubicación preferida actualizada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Location preference updated successfully"
+                                        },
+                                        "location": {
+                                            "type": "string",
+                                            "example": "Boston"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/weather-history": {
+            "get": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Obtener historial de solicitudes de clima",
+                "operationId": "getWeatherHistory",
+                "responses": {
+                    "200": {
+                        "description": "Historial de solicitudes de clima obtenido exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/WeatherRequest"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "total_pages": {
+                                                    "type": "integer"
+                                                },
+                                                "total_requests": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/weather/current": {
+            "get": {
+                "tags": [
+                    "Clima"
+                ],
+                "summary": "Obtener clima actual",
+                "operationId": "getCurrentWeather",
+                "parameters": [
+                    {
+                        "name": "location",
+                        "in": "path",
+                        "description": "Ciudad",
+                        "schema": {
+                            "type": "string",
+                            "example": "Boston"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Datos climáticos",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "Boston": {
+                                        "summary": "Respuesta de ejemplo",
+                                        "value": {
+                                            "location": {
+                                                "name": "Boston",
+                                                "region": "Massachusetts",
+                                                "country": "United States of America",
+                                                "lat": 42.3583,
+                                                "lon": -71.0603,
+                                                "tz_id": "America/New_York",
+                                                "localtime_epoch": 1744376204,
+                                                "localtime": "2025-04-11 08:56"
+                                            },
+                                            "current": {
+                                                "last_updated_epoch": 1744375500,
+                                                "last_updated": "2025-04-11 08:45",
+                                                "temp_c": 3.3,
+                                                "temp_f": 37.9,
+                                                "is_day": 1,
+                                                "condition": {
+                                                    "text": "Overcast",
+                                                    "icon": "//cdn.weatherapi.com/weather/64x64/day/122.png",
+                                                    "code": 1009
+                                                },
+                                                "wind_mph": 3.4,
+                                                "wind_kph": 5.4,
+                                                "wind_degree": 91,
+                                                "wind_dir": "E",
+                                                "pressure_mb": 1025,
+                                                "pressure_in": 30.28,
+                                                "precip_mm": 2.48,
+                                                "precip_in": 0.1,
+                                                "humidity": 89,
+                                                "cloud": 100,
+                                                "feelslike_c": 2,
+                                                "feelslike_f": 35.6,
+                                                "windchill_c": -1.7,
+                                                "windchill_f": 29,
+                                                "heatindex_c": 1.4,
+                                                "heatindex_f": 34.5,
+                                                "dewpoint_c": 0.7,
+                                                "dewpoint_f": 33.2,
+                                                "vis_km": 16,
+                                                "vis_miles": 9,
+                                                "uv": 0.2,
+                                                "gust_mph": 4.4,
+                                                "gust_kph": 7.1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "Unauthenticated.": {
+                                        "summary": "Respuesta de ejemplo",
+                                        "value": {
+                                            "message": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/weather/forecast": {
+            "get": {
+                "tags": [
+                    "Clima"
+                ],
+                "summary": "Obtener pronóstico del clima",
+                "operationId": "getWeatherForecast",
+                "parameters": [
+                    {
+                        "name": "location",
+                        "in": "path",
+                        "description": "Ciudad",
+                        "schema": {
+                            "type": "string",
+                            "example": "Boston"
+                        }
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "Número de días para el pronóstico",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Datos del pronóstico del clima",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "Boston": {
+                                        "summary": "Respuesta de ejemplo",
+                                        "value": {
+                                            "location": {
+                                                "name": "Boston",
+                                                "region": "Massachusetts",
+                                                "country": "United States of America",
+                                                "lat": 42.3583,
+                                                "lon": -71.0603,
+                                                "tz_id": "America/New_York",
+                                                "localtime_epoch": 1744376204,
+                                                "localtime": "2025-04-11 08:56"
+                                            },
+                                            "forecast": {
+                                                "forecastday": {
+                                                    "date": "2025-04-11",
+                                                    "date_epoch": 1744329600,
+                                                    "day": {
+                                                        "maxtemp_c": 5.3,
+                                                        "maxtemp_f": 41.5,
+                                                        "mintemp_c": 1.1,
+                                                        "mintemp_f": 34,
+                                                        "avgtemp_c": 3.4,
+                                                        "avgtemp_f": 38.1,
+                                                        "maxwind_mph": 9.4,
+                                                        "maxwind_kph": 15.1,
+                                                        "totalprecip_mm": 2.48,
+                                                        "totalprecip_in": 0.1,
+                                                        "totalsnow_cm": 0,
+                                                        "avgvis_km": 8.8,
+                                                        "avgvis_miles": 5,
+                                                        "avghumidity": 88,
+                                                        "daily_will_it_rain": 0,
+                                                        "daily_chance_of_rain": 62,
+                                                        "daily_will_it_snow": 0,
+                                                        "daily_chance_of_snow": 0,
+                                                        "condition": {
+                                                            "text": "Patchy rain nearby",
+                                                            "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+                                                            "code": 1063
+                                                        },
+                                                        "uv": 1.1
+                                                    },
+                                                    "astro": {
+                                                        "sunrise": "06:09 AM",
+                                                        "sunset": "07:22 PM",
+                                                        "moonrise": "06:19 PM",
+                                                        "moonset": "05:30 AM",
+                                                        "moon_phase": "Waxing Gibbous",
+                                                        "moon_illumination": 96,
+                                                        "is_moon_up": 1,
+                                                        "is_sun_up": 0
+                                                    },
+                                                    "hour": [
+                                                        {
+                                                            "time_epoch": 1744344000,
+                                                            "time": "2025-04-11 00:00",
+                                                            "temp_c": 4.7,
+                                                            "temp_f": 40.5,
+                                                            "is_day": 0,
+                                                            "condition": {
+                                                                "text": "Overcast ",
+                                                                "icon": "//cdn.weatherapi.com/weather/64x64/night/122.png",
+                                                                "code": 1009
+                                                            },
+                                                            "wind_mph": 7.8,
+                                                            "wind_kph": 12.6,
+                                                            "wind_degree": 203,
+                                                            "wind_dir": "SSW",
+                                                            "pressure_mb": 1027,
+                                                            "pressure_in": 30.33,
+                                                            "precip_mm": 0,
+                                                            "precip_in": 0,
+                                                            "snow_cm": 0,
+                                                            "humidity": 73,
+                                                            "cloud": 100,
+                                                            "feelslike_c": 2.6,
+                                                            "feelslike_f": 36.7,
+                                                            "windchill_c": 2.6,
+                                                            "windchill_f": 36.7,
+                                                            "heatindex_c": 4.7,
+                                                            "heatindex_f": 40.5,
+                                                            "dewpoint_c": 0.1,
+                                                            "dewpoint_f": 32.3,
+                                                            "will_it_rain": 0,
+                                                            "chance_of_rain": 0,
+                                                            "will_it_snow": 0,
+                                                            "chance_of_snow": 0,
+                                                            "vis_km": 10,
+                                                            "vis_miles": 6,
+                                                            "gust_mph": 10.9,
+                                                            "gust_kph": 17.6,
+                                                            "uv": 0
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "Unauthenticated.": {
+                                        "summary": "Respuesta de ejemplo",
+                                        "value": {
+                                            "message": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
-            "User": {
-                "title": "User",
-                "description": "User model",
-                "required": [
-                    "id",
-                    "name",
-                    "email"
-                ],
+            "UserProfileResource": {
+                "title": "UserProfileResource",
+                "description": "User profile resource",
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "format": "int64",
                         "example": 1
                     },
                     "name": {
@@ -107,8 +705,11 @@
                     },
                     "email": {
                         "type": "string",
-                        "format": "email",
-                        "example": "user@example.com"
+                        "example": "johndoe@example.com"
+                    },
+                    "location_preference": {
+                        "type": "string",
+                        "example": "Boston"
                     },
                     "created_at": {
                         "type": "string",
@@ -120,13 +721,129 @@
                     }
                 },
                 "type": "object"
+            },
+            "User": {
+                "title": "Usuario",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "johndoe@example.com"
+                    },
+                    "location_preference": {
+                        "type": "string",
+                        "example": "Boston"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Error": {
+                "title": "Error",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Error message"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "field": [
+                                "Error message"
+                            ]
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "WeatherRequest": {
+                "required": [
+                    "user_id",
+                    "location"
+                ],
+                "properties": {
+                    "user_id": {
+                        "properties": {
+                            "user_id": {
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "integer"
+                    },
+                    "location": {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Boston"
+                            }
+                        },
+                        "type": "string"
+                    },
+                    "response_data": {
+                        "properties": {
+                            "current": {
+                                "type": "object"
+                            },
+                            "location": {
+                                "type": "object"
+                            },
+                            "forecast": {
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "ip_address": {
+                        "properties": {
+                            "ip_address": {
+                                "type": "string",
+                                "example": "192.168.1.4"
+                            }
+                        },
+                        "type": "string"
+                    },
+                    "user_agent": {
+                        "properties": {
+                            "user_agent": {
+                                "type": "string",
+                                "example": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+                            }
+                        },
+                        "type": "string"
+                    }
+                },
+                "type": "object"
             }
         }
     },
     "tags": [
         {
             "name": "Autenticación",
-            "description": "Autenticación"
+            "description": "Operaciones de autenticación"
+        },
+        {
+            "name": "Usuario",
+            "description": "Operaciones relacionadas con el usuario"
+        },
+        {
+            "name": "Clima",
+            "description": "Operaciones relacionadas con datos climáticos"
         }
     ]
 }
