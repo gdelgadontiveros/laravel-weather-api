@@ -1,66 +1,124 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Weather API con Laravel 12
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=black)
 
-## About Laravel
+API en Laravel 12 para la gestion de usuarios, consultar datos climáticos desde WeatherAPI y documentada con Swagger.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Características Principales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- ✅ Autenticación con Laravel Sanctum
+- ✅ Gestion de Usuarios
+- ✅ Integración con WeatherAPI para la consulta del clima, manejo de historial y favoritos
+- ✅ RateLimit para el control de peticiones a la api
+- ✅ Documentación con Swagger
+- ✅ Arquitectura escalable
+- ✅ Buenas prácticas de seguridad
+- ✅ Testing
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requisitos Técnicos
 
-## Learning Laravel
+- PHP 8.2+
+- Laravel 12
+- Composer 2.7+
+- Redis (opcional para caché)
+- Base de datos de su preferencia (para este proyecto se utilizo -> Postgresql)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalación
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. Clonar repositorio:
+```bash
+git clone https://github.com/gdelgadontiveros/laravel-weather-api.git
+cd laravel-weather-api
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. Instalar de dependencias:
+```bash
+composer install
+```
 
-## Laravel Sponsors
+3. Configurar entorno:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. Configurar variables de entorno:
+```bash
 
-### Premium Partners
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=weatherapi
+DB_USERNAME=weatherapi
+DB_PASSWORD=weatherapi*2025
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+WEATHER_API_KEY=tu_api_key_weatherapi
+WEATHER_API_URL=https://api.weatherapi.com/v1
+WEATHER_CACHE_TTL=60
 
-## Contributing
+API_RATE_LIMIT=60
+AUTH_RATE_LIMIT=10
+WEATHER_RATE_LIMIT=30
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+L5_SWAGGER_GENERATE_ALWAYS=true
+L5_SWAGGER_CONST_HOST=http://localhost:8000
 
-## Code of Conduct
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. Ejecutar migraciones:
+```bash
+php artisan migrate --seed
+```
 
-## Security Vulnerabilities
+6. Generar documentación Swagger:
+```bash
+php artisan l5-swagger:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Estructura del Proyecto
 
-## License
+```bash
+app/
+├── Http/                    #
+│   ├── Controllers/         #
+│           ├── API/V1       # Controladores necesarios ordenados por modelo de datos
+│   ├── Middleware/          #
+│   └── Requests/            #
+│   └── Resources/           #
+├── Models/                  # Modelos
+├── Providers/               # Configuracion del RateLimitProvider
+├── Services/                #
+│   ├── Weather/             # Servicio para weatherapi
+config/                      # Configuraciones
+routes/                      # Definición de rutas
+tests/                       # Pruebas automatizadas
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Uso de la API
+
+Documentación Swagger cambiar localhost:8000 por url:port de configuración:
+```bash
+http://localhost:8000/api/documentation
+```
+
+## Pruebas
+```bash
+# Ejecutar todas las pruebas
+php artisan test
+
+# Pruebas específicas
+php artisan test --filter MissingRouteTest
+php artisan test --filter AuthenticationTest
+php artisan test --filter UserApiTest
+php artisan test --filter WeatherApiTest
+```
+
+## Contacto
+
+- Author: Gustavo Delgado
+- Twitter: [@gdelgadoCode](https://twitter.com/gdelgadoCode)
+- Instagram: [@gustavod88](https://www.instagram.com/gustavod88/)
+- Email: gustavo.a.delgado.o@gmail.com
+- Enlace del proyecto: https://github.com/gdelgadontiveros/laravel-weather-api.git
+

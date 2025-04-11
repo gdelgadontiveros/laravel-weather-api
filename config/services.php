@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'weather' => [
+        'key' => env('WEATHER_API_KEY'),
+        'base_url' => env('WEATHER_API_URL', 'https://api.weatherapi.com/v1'),
+        'cache_ttl' => env('WEATHER_CACHE_TTL', 60), // minutos
+    ],
+
 ];
