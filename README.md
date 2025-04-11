@@ -97,6 +97,11 @@ tests/                       # Pruebas automatizadas
 
 ## Uso de la API
 
+Levantamos el servidor de prueba:
+```bash
+php artisan serve
+```
+
 Documentación Swagger cambiar localhost:8000 por url:port de configuración:
 ```bash
 http://localhost:8000/api/documentation
