@@ -116,5 +116,9 @@ php artisan test --filter WeatherApiTest
 
 ## Contacto
 
-Gustavo Delgado - [@gdelgadoCode](https://twitter.com/gdelgadoCode) - gustavo.a.delgado.o@gmail.com
-Enlace del proyecto: https://github.com/gdelgadontiveros/laravel-weather-api.git
+- Author: Gustavo Delgado
+- Twitter: [@gdelgadoCode](https://twitter.com/gdelgadoCode)
+- Instagram: [@gustavod88](https://www.instagram.com/gustavod88/)
+- Email: gustavo.a.delgado.o@gmail.com
+- Enlace del proyecto: https://github.com/gdelgadontiveros/laravel-weather-api.git
+
